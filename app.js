@@ -7,7 +7,7 @@ function main() {
     if (!gl) {
         return;
     }
-
+    //
     // Use our boilerplate utils to compile the shaders and link into a program
     var program = webglUtils.createProgramFromScripts(gl, ["vertexShader", "fragmentShader"]);
 
