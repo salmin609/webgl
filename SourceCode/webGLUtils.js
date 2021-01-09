@@ -122,7 +122,8 @@
      * @memberOf module:webgl-utils
      */
     function createProgram(
-        gl, shaders, opt_attribs, opt_locations, opt_errorCallback) {
+        gl, shaders, opt_attribs, opt_locations, opt_errorCallback) 
+    {
       const errFn = opt_errorCallback || error;
       const program = gl.createProgram();
       shaders.forEach(function(shader) {
