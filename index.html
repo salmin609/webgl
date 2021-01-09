@@ -1,0 +1,31 @@
+<canvas id = "c"></canvas>
+    <script id = "vertexShader" type = "notjs">
+        attribute vec4 vertexPos;
+        uniform vec2 resolution;
+
+        void main()
+        {
+            vec2 zeroToOne = vertexPos.xy / resolution;
+
+            vec2 zeroToTwo = zeroToOne * 2.0;
+
+            vec2 clipSpace = zeroToTwo - 1.0;
+
+            gl_Position = vec4(clipSpace, 0, 1);
+        }
+    </script>
+
+    <script id = "fragmentShader" type = "notjs">
+
+        precision mediump float;
+        uniform vec4 color;
+
+        void main()
+        {
+            gl_FragColor = color;
+        }
+
+    </script>
+    
+<script src = "webGLUtils.js"></script>
+<script src = "https://drive.google.com/file/d/1Vn7nU2ndyEo2pbDcstOCOkFsZPKDHQ2N/view?usp=sharing"> </script>
