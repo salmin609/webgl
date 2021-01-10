@@ -7,9 +7,12 @@ function main() {
     if (!gl) {
         return;
     }
+    var translation = [0, 0];
+    var angleInRadians = 0;
+    var scale = [1, 1];
+
     // Use our boilerplate utils to compile the shaders and link into a program
     var program = webglUtils.createProgramFromScripts(gl, ["vertexShader", "fragmentShader"]);
-
     // look up where the vertex data needs to go.
     var positionAttributeLocation = myUtils.GetAttribLocation(gl, program, "vertexPos");
 
@@ -19,9 +22,16 @@ function main() {
     // Color uniform locations
     var colorUniformLocation = myUtils.GetUniformLocation(gl, program, "color");
 
+    // mat uniform location
+    var matUniformLocation = myUtils.GetUniformLocation(gl, program, "u_mat");
+
     // Create a buffer to put three 2d clip space points in
     var positionBuffer = myUtils.CreateBuffer(gl);
-    
+
+    myUtils.BindBuffer(gl, gl.ARRAY_BUFFER, positionBuffer);
+
+    myUtils.SetTriangle(gl, myUtils.RandomInt(300), myUtils.RandomInt(300), myUtils.RandomInt(300), myUtils.RandomInt(300));
+
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
     // Tell WebGL how to convert from clip space to pixels
@@ -36,8 +46,8 @@ function main() {
     // Turn on the attribute
     gl.enableVertexAttribArray(positionAttributeLocation);
 
-    // Bind the position buffer.
     myUtils.BindBuffer(gl, gl.ARRAY_BUFFER, positionBuffer);
+    // Bind the position buffer.
 
     // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
     var size = 2;          // 2 components per iteration
@@ -47,25 +57,26 @@ function main() {
     var offset = 0;        // start at the beginning of the buffer
     gl.vertexAttribPointer(
         positionAttributeLocation, size, type, normalize, stride, offset);
-
+    
+    
     // set the resolution
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+    gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1);
+
+    var translationMatrix = m3.translation(translation[0], translation[1]);
+    var rotationMatrix = m3.rotation(angleInRadians);
+    var scaleMatrix = m3.scaling(scale[0], scale[1]);
+    var matrix = m3.multiply(scaleMatrix, rotationMatrix);
+    matrix = m3.multiply(matrix, translationMatrix);
+
+    console.log(resolutionUniformLocation, positionAttributeLocation, colorUniformLocation, matUniformLocation);
+    gl.uniformMatrix3fv(matUniformLocation, false, matrix);
 
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
-    var count = 6;
+    var count = 3;
 
-    for (var i = 0; i < 50; ++i) 
-    {
-        // draw
-        myUtils.SetRectangle(gl, myUtils.RandomInt(300), myUtils.RandomInt(300), myUtils.RandomInt(300), myUtils.RandomInt(300));
-        gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1);
-        gl.drawArrays(primitiveType, offset, count);
-
-        myUtils.SetTriangle(gl, myUtils.RandomInt(300), myUtils.RandomInt(300), myUtils.RandomInt(300), myUtils.RandomInt(300));
-        gl.drawArrays(primitiveType, offset, 3);
-    }
-
+    gl.drawArrays(primitiveType, offset, count);
 }
 
 main();

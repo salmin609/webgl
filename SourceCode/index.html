@@ -1,11 +1,14 @@
 <canvas id = "c"></canvas>
     <script id = "vertexShader" type = "notjs">
-        attribute vec4 vertexPos;
+        attribute vec2 vertexPos;
         uniform vec2 resolution;
+        uniform mat3 u_mat;
 
         void main()
         {
-            vec2 zeroToOne = vertexPos.xy / resolution;
+            vec2 position = (u_mat * vec3(vertexPos, 1)).xy;
+
+            vec2 zeroToOne = position / resolution;
 
             vec2 zeroToTwo = zeroToOne * 2.0;
 
@@ -26,6 +29,7 @@
         }
 
     </script>
+<script src = "m3.js"></script>
 <script src = "functions.js"></script>
 <script src = "webGLUtils.js"></script>
 <script src = "app.js"> </script>
