@@ -22,17 +22,12 @@ var myUtils = {
         gl.STATIC_DRAW);
     },
 
-    SetTriangle:function(gl, x, y, width, height)
+    SetTriangle:function(gl)
     {
-        var x1 = x;
-        var x2 = x + width;
-        var y1 = y;
-        var y2 = y + height;
-
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-            x1, y1,
-            x2, y1,
-            x1, y2,
+            0, 50,
+            100, 50,
+            0, 100,
         ]),
         gl.STATIC_DRAW);    
     },
