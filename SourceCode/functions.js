@@ -15,36 +15,6 @@ var myUtils = {
         myUtils.RefreshBuffer(gl);
         gl.useProgram(program);
     },
-
-    GetWorldMatrix:function(gl, fieldOfViewRadians, translation, rotation, scale)
-    {
-        var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-        var zNear = 1;
-        var zFar = 2000;
-        var matrix = m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);
-        matrix = m4.translate(matrix, translation[0], translation[1], translation[2]);
-        matrix = m4.xRotate(matrix, rotation[0]);
-        matrix = m4.yRotate(matrix, rotation[1]);
-        matrix = m4.zRotate(matrix, rotation[2]);
-        matrix = m4.scale(matrix, scale[0], scale[1], scale[2]);
-        return matrix;
-    },
-
-    SendWorldMatrix:function(gl, fieldOfViewRadians, translation, rotation, scale, matrixUniformLocation)
-    {
-        var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-        var zNear = 1;
-        var zFar = 2000;
-        var matrix = m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);
-        matrix = m4.translate(matrix, translation[0], translation[1], translation[2]);
-        matrix = m4.xRotate(matrix, rotation[0]);
-        matrix = m4.yRotate(matrix, rotation[1]);
-        matrix = m4.zRotate(matrix, rotation[2]);
-        matrix = m4.scale(matrix, scale[0], scale[1], scale[2]);
-        
-        gl.uniformMatrix4fv(matrixUniformLocation, false, matrix);
-    },
-    
     SetGeometry:function(gl) 
     {
         gl.bufferData(

@@ -127,7 +127,7 @@ function main() {
     {
         myUtils.CullingAndDepthEnable(gl);
         myUtils.RenderingSetting(gl, program);
-        myUtils.SendWorldMatrix(gl, fieldOfViewRadians, translation, rotation, scale, matUniformLocation);
+        m4.SendWorldMatrix(gl, fieldOfViewRadians, translation, rotation, scale, matUniformLocation);
 
         var primitiveType = gl.TRIANGLES;
         var offset = 0;
