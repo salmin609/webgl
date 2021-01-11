@@ -64,4 +64,28 @@ var m3 = {
         0, 0, 1,
       ];
     },
+
+    projection: function(width, height) {
+      // 참고: 이 행렬은 Y축을 뒤집어서 0이 상단에 있도록 합니다.
+      return [
+        2 / width, 0, 0,
+        0, -2 / height, 0,
+        -1, 1, 1
+      ]
+    },
+
+    translate:function(m, tx, ty)
+    {
+      return m3.multiply(m, m3.translation(tx, ty));
+    },
+    
+    rotate:function(m, angleInRadians)
+    {
+      return m3.multiply(m, m3.rotation(angleInRadians));
+    },
+
+    scale:function(m, sx, sy)
+    {
+      return m3.multiply(m, m3.scaling(sx, sy));
+    },
   };
