@@ -23,6 +23,7 @@ function main() {
     SetVariables();
     SetUi();
     SetBuffer();
+    SettingAttribArray();
     Render();
 
     function SetUi()
@@ -90,22 +91,8 @@ function main() {
         fieldOfViewRadians = myUtils.degToRad(80);
     }
 
-    function Render()
+    function SettingAttribArray()
     {
-        gl.enable(gl.CULL_FACE);
-        gl.enable(gl.DEPTH_TEST);
-
-        webglUtils.resizeCanvasToDisplaySize(gl.canvas);
-
-        // Tell WebGL how to convert from clip space to pixels
-        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-
-        // Clear the canvas
-        myUtils.RefreshBuffer(gl);
-
-        // Tell it to use our program (pair of shaders)
-        gl.useProgram(program);
-
         // Turn on the attribute
         gl.enableVertexAttribArray(positionAttributeLocation);
 
@@ -134,20 +121,13 @@ function main() {
         gl.vertexAttribPointer(
             colorAttributeLocation, size, type, normalize, stride, offset
         );
+    }
 
-        gl.uniform4fv(colorUniformLocation, color);
-
-        var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-        var zNear = 1;
-        var zFar = 2000;
-        var matrix = m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);
-        matrix = m4.translate(matrix, translation[0], translation[1], translation[2]);
-        matrix = m4.xRotate(matrix, rotation[0]);
-        matrix = m4.yRotate(matrix, rotation[1]);
-        matrix = m4.zRotate(matrix, rotation[2]);
-        matrix = m4.scale(matrix, scale[0], scale[1], scale[2]);
-
-        gl.uniformMatrix4fv(matUniformLocation, false, matrix);
+    function Render()
+    {
+        myUtils.CullingAndDepthEnable(gl);
+        myUtils.RenderingSetting(gl, program);
+        myUtils.SendWorldMatrix(gl, fieldOfViewRadians, translation, rotation, scale, matUniformLocation);
 
         var primitiveType = gl.TRIANGLES;
         var offset = 0;
