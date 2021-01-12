@@ -3,7 +3,7 @@ var m4 = {
   lookAt: function (cameraPosition, target, up) {
     var zAxis = vectorMath.normalize(
       vectorMath.subtractVectors(cameraPosition, target));
-    var xAxis = vectorMath.normalize(vectorMath.cross(zAxis, up));
+    var xAxis = vectorMath.normalize(vectorMath.cross(up, zAxis));
     var yAxis = vectorMath.normalize(vectorMath.cross(zAxis, xAxis));
 
     return [

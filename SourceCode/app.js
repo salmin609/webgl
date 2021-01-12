@@ -22,13 +22,14 @@ function main() {
   var radius;
   var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
   var projectionMatrix;
+  var then = 0;
 
   SetVariables();
   SetUi();
   SetBuffer();
   SettingAttribArray();
   RenderingSetting();
-  Render();
+  requestAnimationFrame(Render);
 
   function SetUi() {
     webglLessonsUI.setupSlider("#cameraAngle", { value: myUtils.radToDeg(cameraAngleRadians), slide: updateCameraAngle, min: -360, max: 360 });
@@ -54,8 +55,8 @@ function main() {
 
   function SetVariables() 
   {
-    translation = [-150, 0, -360];
-    rotation = [myUtils.degToRad(30), myUtils.degToRad(60), myUtils.degToRad(100)];
+    translation = [0, 0, -360];
+    rotation = [myUtils.degToRad(190), myUtils.degToRad(40), myUtils.degToRad(320)];
     scale = [1, 1, 1];
     program = webglUtils.createProgramFromScripts(gl, ["vertexShader", "fragmentShader"]);
     positionAttributeLocation = myUtils.GetAttribLocation(gl, program, "vertexPos");
@@ -99,8 +100,13 @@ function main() {
     );
   }
 
-  function Render() 
+  function Render(now) 
   {
+    now *= 0.001;
+    var deltaTime = now - then;
+    then = now;
+
+    rotation[1] += 1.2 * deltaTime;
     var viewMatrix = m4.getViewMatrix(cameraAngleRadians, radius);
     var matrix = m4.getWorldMatrix(translation, rotation, scale);
 
@@ -113,6 +119,7 @@ function main() {
     var offset = 0;
     var count = 16 * 6;
     gl.drawArrays(primitiveType, offset, count);
+    requestAnimationFrame(Render);
   }
 }
 
