@@ -21,7 +21,7 @@ function main() {
   var numFs;
   var radius;
   var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-
+  var projectionMatrix;
 
   SetVariables();
   SetUi();
@@ -51,10 +51,11 @@ function main() {
     myUtils.BindBuffer(gl, gl.ARRAY_BUFFER, colorBuffer);
     myUtils.SetColors(gl);
   }
+
   function SetVariables() 
   {
     translation = [-150, 0, -360];
-    rotation = [myUtils.degToRad(190), myUtils.degToRad(40), myUtils.degToRad(320)];
+    rotation = [myUtils.degToRad(30), myUtils.degToRad(60), myUtils.degToRad(100)];
     scale = [1, 1, 1];
     program = webglUtils.createProgramFromScripts(gl, ["vertexShader", "fragmentShader"]);
     positionAttributeLocation = myUtils.GetAttribLocation(gl, program, "vertexPos");
@@ -64,6 +65,7 @@ function main() {
     cameraAngleRadians = myUtils.degToRad(0);
     radius = 200;
     numFs = 5;
+    projectionMatrix = m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
   }
 
   function SettingAttribArray() {
@@ -97,39 +99,20 @@ function main() {
     );
   }
 
-  function Render() {
-    var projectionMatrix = m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
-    var fPosition = [radius, 0, 0];
-    var cameraMatrix = m4.yRotation(cameraAngleRadians);
-    cameraMatrix = m4.translate(cameraMatrix, 0, 0, radius * 1.5);
+  function Render() 
+  {
+    var viewMatrix = m4.getViewMatrix(cameraAngleRadians, radius);
+    var matrix = m4.getWorldMatrix(translation, rotation, scale);
 
-    var cameraPosition = [
-      cameraMatrix[12],
-      cameraMatrix[13],
-      cameraMatrix[14],
-    ];
-    var up = [0, 1, 0];
+    var viewWorldMatrix = m4.multiply(viewMatrix, matrix);
+    var viewProjectionMatrix = m4.multiply(projectionMatrix, viewWorldMatrix);
 
-    var cameraMatrix = m4.lookAt(cameraPosition, fPosition, up);
-    var viewMatrix = m4.inverse(cameraMatrix);
-    var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
+    gl.uniformMatrix4fv(matUniformLocation, false, viewProjectionMatrix);
 
-
-
-    for (var i = 0; i < numFs; ++i) {
-      var angle = i * Math.PI * 2 / numFs;
-      var x = Math.cos(angle) * radius;
-      var y = Math.sin(angle) * radius;
-
-      var matrix = m4.translate(viewProjectionMatrix, x, 0, y);
-      gl.uniformMatrix4fv(matUniformLocation, false, matrix);
-
-      var primitiveType = gl.TRIANGLES;
-      var offset = 0;
-      var count = 16 * 6;
-
-      gl.drawArrays(primitiveType, offset, count);
-    }
+    var primitiveType = gl.TRIANGLES;
+    var offset = 0;
+    var count = 16 * 6;
+    gl.drawArrays(primitiveType, offset, count);
   }
 }
 
