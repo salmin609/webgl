@@ -12,10 +12,11 @@ function main() {
   var scale;
   var program;
   var positionAttributeLocation;
-  var colorAttributeLocation;
+  var textureAttributeLocation;
+  var textureUniformLocation;
   var matUniformLocation;
   var positionBuffer;
-  var colorBuffer;
+  var textureBuffer;
   var fieldOfViewRadians;
   var cameraAngleRadians;
   var numFs;
@@ -48,9 +49,9 @@ function main() {
     myUtils.BindBuffer(gl, gl.ARRAY_BUFFER, positionBuffer);
     myUtils.SetGeometry(gl);
 
-    colorBuffer = myUtils.CreateBuffer(gl);
-    myUtils.BindBuffer(gl, gl.ARRAY_BUFFER, colorBuffer);
-    myUtils.SetColors(gl);
+    textureBuffer = myUtils.CreateBuffer(gl);
+    // myUtils.BindBuffer(gl, gl.ARRAY_BUFFER, textureBuffer);
+    // myUtils.SetColors(gl);
   }
 
   function SetVariables() 
@@ -60,7 +61,8 @@ function main() {
     scale = [1, 1, 1];
     program = webglUtils.createProgramFromScripts(gl, ["vertexShader", "fragmentShader"]);
     positionAttributeLocation = myUtils.GetAttribLocation(gl, program, "vertexPos");
-    colorAttributeLocation = myUtils.GetAttribLocation(gl, program, "color");
+    textureAttributeLocation = myUtils.GetAttribLocation(gl, program, "texcoord");
+    textureUniformLocation = myUtils.GetUniformLocation(gl, program, "u_texture");
     matUniformLocation = myUtils.GetUniformLocation(gl, program, "u_mat");
     fieldOfViewRadians = myUtils.degToRad(60);
     cameraAngleRadians = myUtils.degToRad(0);
@@ -85,19 +87,37 @@ function main() {
     gl.vertexAttribPointer(
       positionAttributeLocation, size, type, normalize, stride, offset);
 
-    gl.enableVertexAttribArray(colorAttributeLocation);
+    myUtils.BindBuffer(gl, gl.ARRAY_BUFFER, textureBuffer);
+    myUtils.setTexcoords(gl);
 
-    myUtils.BindBuffer(gl, gl.ARRAY_BUFFER, colorBuffer);
+    gl.enableVertexAttribArray(textureAttributeLocation);
+    gl.vertexAttribPointer(textureAttributeLocation, 2, gl.FLOAT, false, 0, 0);
 
-    size = 3;
-    type = gl.UNSIGNED_BYTE;
-    normalize = true;
-    stride = 0;
-    offset = 0;
+    var texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 255, 255]));
+    var image = new Image();
+    image.src = "kachu.png";
+    image.addEventListener('load', function()
+    {
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+      gl.generateMipmap(gl.TEXTURE_2D);
+    });
 
-    gl.vertexAttribPointer(
-      colorAttributeLocation, size, type, normalize, stride, offset
-    );
+    // gl.enableVertexAttribArray(colorAttributeLocation);
+
+    // myUtils.BindBuffer(gl, gl.ARRAY_BUFFER, colorBuffer);
+
+    // size = 3;
+    // type = gl.UNSIGNED_BYTE;
+    // normalize = true;
+    // stride = 0;
+    // offset = 0;
+
+    // gl.vertexAttribPointer(
+    //   colorAttributeLocation, size, type, normalize, stride, offset
+    // );
   }
 
   function Render(now) 
@@ -118,6 +138,9 @@ function main() {
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
     var count = 16 * 6;
+
+    gl.uniform1i(textureUniformLocation, 0);
+
     gl.drawArrays(primitiveType, offset, count);
     requestAnimationFrame(Render);
   }
