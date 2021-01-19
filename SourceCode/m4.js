@@ -287,4 +287,10 @@ var m4 = {
 
     return matrix;
   },
+  getProjViewWorldMatrix(matrix, viewMatrix, projectionMatrix)
+  {
+      var viewWorldMatrix = m4.multiply(viewMatrix, matrix);
+      var viewProjectionMatrix = m4.multiply(projectionMatrix, viewWorldMatrix);
+      return viewProjectionMatrix;
+  }
 };
