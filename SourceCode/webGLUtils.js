@@ -207,7 +207,9 @@
      * @memberOf module:webgl-utils
      */
     function createProgramFromScripts(
-        gl, shaderScriptIds, opt_attribs, opt_locations, opt_errorCallback) {
+        gl, shaderScriptIds, opt_attribs, opt_locations, opt_errorCallback) 
+    {
+      console.log(shaderScriptIds);
       const shaders = [];
       for (let ii = 0; ii < shaderScriptIds.length; ++ii) {
         shaders.push(createShaderFromScript(
