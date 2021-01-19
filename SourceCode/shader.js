@@ -49,16 +49,35 @@ class Shader{
         var texture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, texture);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 255, 255]));
+
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        var textureInfo = {
+            width : 1,
+            height : 1,
+            texture : texture,
+        };
+
         var image = new Image();
-        image.src = "kachu.png";
+        this.requestCORSIfNotSameOrigin(image, 'https://live.staticflickr.com/65535/50852583482_d261aa0873_k.jpg');
+        image.src = 'https://live.staticflickr.com/65535/50852583482_d261aa0873_k.jpg';
         image.addEventListener('load', function()
         {
-            gl.bindTexture(gl.TEXTURE_2D, texture);
+            textureInfo.width = image.width;
+            textureInfo.height = image.height;
+
+            gl.bindTexture(gl.TEXTURE_2D, textureInfo.texture);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-            gl.generateMipmap(gl.TEXTURE_2D);
+            //gl.generateMipmap(gl.TEXTURE_2D);
         });
     }
-
+    requestCORSIfNotSameOrigin(img, url) 
+    {
+        if ((new URL(url, window.location.href)).origin !== window.location.origin) {
+          img.crossOrigin = "";
+        }
+    }
     GetProgram()
     {
         return this.program;
