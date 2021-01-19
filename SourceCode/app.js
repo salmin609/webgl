@@ -10,6 +10,9 @@ function main() {
   let shader = new Shader(gl, "vertexShader", "fragmentShader");
   let obj = new Obj(shader, [0, 0, -360], [1, 1, 1], [myUtils.degToRad(190), myUtils.degToRad(40), myUtils.degToRad(320)]);
   let obj2 = new Obj(shader, [0, 0, -180], [2, 2, 2], [myUtils.degToRad(120), myUtils.degToRad(140), myUtils.degToRad(120)]);
+  let objs = new Array();
+  objs.push(obj);
+  objs.push(obj2);
   var fieldOfViewRadians;
   var cameraAngleRadians;
   var radius;
@@ -51,42 +54,24 @@ function main() {
     obj.Rotate(1.2 * deltaTime);
     obj2.Rotate(1.4 * deltaTime);
 
-
     var viewMatrix = m4.getViewMatrix(cameraAngleRadians, radius);
-    var matrix = m4.getWorldMatrix(obj.Translation(), obj.Rotation(), obj.Scale());
-
-    var viewWorldMatrix = m4.multiply(viewMatrix, matrix);
-    var viewProjectionMatrix = m4.multiply(projectionMatrix, viewWorldMatrix);
-    
-    gl.uniformMatrix4fv(obj.shader.GetMatrixUniformLocation(), false, viewProjectionMatrix);
 
     var primitiveType = gl.TRIANGLES;
     var offset = 0;
     var count = 16 * 6;
 
-    gl.uniform1i(obj.shader.GetTextureUniformLocation(), 0);
+    for(var i = 0; i < objs.length; ++i)
+    {
+      var object = objs[i];
+      var matrix = object.GetWorldMatrix();
+      var viewWorldMatrix = m4.multiply(viewMatrix, matrix);
+      var viewProjectionMatrix = m4.multiply(projectionMatrix, viewWorldMatrix);
 
-    gl.drawArrays(primitiveType, offset, count);
+      gl.uniformMatrix4fv(object.shader.GetMatrixUniformLocation(), false, viewProjectionMatrix);
+      gl.uniform1i(object.shader.GetTextureUniformLocation(), 0);
+      gl.drawArrays(primitiveType, offset, count);
+    }
 
-//------------------------------------------------------------
-
-    var viewMatrix = m4.getViewMatrix(cameraAngleRadians, radius);
-    var matrix = m4.getWorldMatrix(obj2.Translation(), obj2.Rotation(), obj2.Scale());
-
-    var viewWorldMatrix = m4.multiply(viewMatrix, matrix);
-    var viewProjectionMatrix = m4.multiply(projectionMatrix, viewWorldMatrix);
-    
-    gl.uniformMatrix4fv(obj.shader.GetMatrixUniformLocation(), false, viewProjectionMatrix);
-
-    var primitiveType = gl.TRIANGLES;
-    var offset = 0;
-    var count = 16 * 6;
-
-    gl.uniform1i(obj.shader.GetTextureUniformLocation(), 0);
-
-    gl.drawArrays(primitiveType, offset, count);
-
-//--------------------------------------------------------------
     requestAnimationFrame(Render);
   }
 }

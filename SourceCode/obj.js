@@ -6,7 +6,7 @@ class Obj {
         this.rotation = rotation;
         this.shader = shader;
     }
-    
+
     Translation()
     {
         return this.translation;
@@ -26,5 +26,9 @@ class Obj {
     GetProgram()
     {
         return this.shader.GetProgram();
+    }
+    GetWorldMatrix()
+    {
+        return m4.getWorldMatrix(this.translation, this.rotation, this.scale);
     }
 };
