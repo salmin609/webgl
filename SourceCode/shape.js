@@ -1,6 +1,9 @@
 var shape = {
-    threeDimensionF:function()
+    ThreeDimensionF:function(gl, info)
     {
+        info.vertexCount = 16 * 6;
+        info.primitiveType = gl.TRIANGLES;
+        info.offset = 0;
         return new Float32Array([
             // left column front
             0,   0,  0,
@@ -131,7 +134,7 @@ var shape = {
             0, 150,   0])
     },
 
-    threeDimensionFColor:function()
+    ThreeDimensionFColor:function()
     {
         return new Uint8Array([
             // left column front

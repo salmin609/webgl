@@ -15,17 +15,17 @@ var myUtils = {
         myUtils.RefreshBuffer(gl);
         gl.useProgram(program);
     },
-    SetGeometry:function(gl) 
+    SetGeometry:function(gl, info)
     {
         gl.bufferData(
             gl.ARRAY_BUFFER,
-            shape.threeDimensionF(),
+            shape.ThreeDimensionF(gl, info),
             gl.STATIC_DRAW);
     },
     SetColors:function(gl) {
         gl.bufferData(
             gl.ARRAY_BUFFER,
-            shape.threeDimensionFColor(),
+            shape.ThreeDimensionFColor(),
             gl.STATIC_DRAW);
     },
     SetTexcoords:function(gl) 

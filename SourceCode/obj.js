@@ -6,6 +6,10 @@ class Obj {
         this.rotation = rotation;
         this.shader = shader;
     }
+    GetInfo()
+    {
+        return this.shader.GetInfo();
+    }
 
     Translation()
     {

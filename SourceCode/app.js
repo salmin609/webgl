@@ -21,7 +21,7 @@ function main() {
   SetUi();
   RenderingSetting();
   requestAnimationFrame(Render);
-
+  
   function SetUi() {
     
   }
@@ -49,19 +49,17 @@ function main() {
     var projectionMatrix = projection.GetProjectionMatrix(gl);
     var viewMatrix = camera.GetViewMatrix();
 
-    var primitiveType = gl.TRIANGLES;
-    var offset = 0;
-    var count = 16 * 6;
-
     for(var i = 0; i < objs.length; ++i)
     {
       var object = objs[i];
+      var objInfo = object.GetInfo();
+      
       var matrix = object.GetWorldMatrix();
       var viewProjectionMatrix = m4.GetProjViewWorldMatrix(matrix, viewMatrix, projectionMatrix);
 
       gl.uniformMatrix4fv(object.shader.GetMatrixUniformLocation(), false, viewProjectionMatrix);
       gl.uniform1i(object.shader.GetTextureUniformLocation(), 0);
-      gl.drawArrays(primitiveType, offset, count);
+      gl.drawArrays(objInfo.primitiveType, objInfo.offset, objInfo.vertexCount);
     }
 
     requestAnimationFrame(Render);

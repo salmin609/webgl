@@ -1,9 +1,15 @@
 class Shader{
+
     constructor(gl, vertexShaderName, fragmetShaderName)
     {
         this.program = webglUtils.createProgramFromScripts(gl, [vertexShaderName, fragmetShaderName]);
+        this.info = {
+            vertexCount : 0,
+            primitiveType : 0,
+            offset : 0,
+        };
         this.InitLocation(gl);
-        this.InitBuffer(gl);
+        this.InitBuffer(gl, this.info);
         this.SettingAttrib(gl);
     }
 
@@ -14,12 +20,16 @@ class Shader{
         this.textureUniformLocation = myUtils.GetUniformLocation(gl, this.program, "u_texture");
         this.matrixUniformLocation = myUtils.GetUniformLocation(gl, this.program, "u_mat");
     }
+    GetInfo()
+    {
+        return this.info;
+    }
 
-    InitBuffer(gl)
+    InitBuffer(gl, info)
     {
         this.positionBuffer = myUtils.CreateBuffer(gl);
         myUtils.BindBuffer(gl, gl.ARRAY_BUFFER, this.positionBuffer);
-        myUtils.SetGeometry(gl);
+        myUtils.SetGeometry(gl, info);
 
         this.textureBuffer = myUtils.CreateBuffer(gl);
     }
