@@ -1,10 +1,10 @@
 var m4 = {
 
-  lookAt: function (cameraPosition, target, up) {
-    var zAxis = vectorMath.normalize(
-      vectorMath.subtractVectors(cameraPosition, target));
-    var xAxis = vectorMath.normalize(vectorMath.cross(up, zAxis));
-    var yAxis = vectorMath.normalize(vectorMath.cross(zAxis, xAxis));
+  LookAt: function (cameraPosition, target, up) {
+    var zAxis = vectorMath.Normalize(
+      vectorMath.SubtractVectors(cameraPosition, target));
+    var xAxis = vectorMath.Normalize(vectorMath.Cross(up, zAxis));
+    var yAxis = vectorMath.Normalize(vectorMath.Cross(zAxis, xAxis));
 
     return [
       xAxis[0], xAxis[1], xAxis[2], 0,
@@ -17,7 +17,7 @@ var m4 = {
     ];
   },
 
-  perspective: function (fieldOfViewInRadians, aspect, near, far) {
+  Perspective: function (fieldOfViewInRadians, aspect, near, far) {
     var f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfViewInRadians);
     var rangeInv = 1.0 / (near - far);
 
@@ -29,7 +29,7 @@ var m4 = {
     ];
   },
 
-  projection: function (width, height, depth) {
+  Projection: function (width, height, depth) {
     // Note: This matrix flips the Y axis so 0 is at the top.
     return [
       2 / width, 0, 0, 0,
@@ -39,7 +39,7 @@ var m4 = {
     ];
   },
 
-  multiply: function (a, b) {
+  Multiply: function (a, b) {
     var a00 = a[0 * 4 + 0];
     var a01 = a[0 * 4 + 1];
     var a02 = a[0 * 4 + 2];
@@ -92,7 +92,7 @@ var m4 = {
     ];
   },
 
-  translation: function (tx, ty, tz) {
+  Translation: function (tx, ty, tz) {
     return [
       1, 0, 0, 0,
       0, 1, 0, 0,
@@ -101,7 +101,7 @@ var m4 = {
     ];
   },
 
-  xRotation: function (angleInRadians) {
+  XRotation: function (angleInRadians) {
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
 
@@ -113,7 +113,7 @@ var m4 = {
     ];
   },
 
-  yRotation: function (angleInRadians) {
+  YRotation: function (angleInRadians) {
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
 
@@ -125,7 +125,7 @@ var m4 = {
     ];
   },
 
-  zRotation: function (angleInRadians) {
+  ZRotation: function (angleInRadians) {
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
 
@@ -137,7 +137,7 @@ var m4 = {
     ];
   },
 
-  scaling: function (sx, sy, sz) {
+  Scaling: function (sx, sy, sz) {
     return [
       sx, 0, 0, 0,
       0, sy, 0, 0,
@@ -146,27 +146,27 @@ var m4 = {
     ];
   },
 
-  translate: function (m, tx, ty, tz) {
-    return m4.multiply(m, m4.translation(tx, ty, tz));
+  Translate: function (m, tx, ty, tz) {
+    return m4.Multiply(m, m4.Translation(tx, ty, tz));
   },
 
-  xRotate: function (m, angleInRadians) {
-    return m4.multiply(m, m4.xRotation(angleInRadians));
+  XRotate: function (m, angleInRadians) {
+    return m4.Multiply(m, m4.XRotation(angleInRadians));
   },
 
-  yRotate: function (m, angleInRadians) {
-    return m4.multiply(m, m4.yRotation(angleInRadians));
+  YRotate: function (m, angleInRadians) {
+    return m4.Multiply(m, m4.YRotation(angleInRadians));
   },
 
-  zRotate: function (m, angleInRadians) {
-    return m4.multiply(m, m4.zRotation(angleInRadians));
+  ZRotate: function (m, angleInRadians) {
+    return m4.Multiply(m, m4.ZRotation(angleInRadians));
   },
 
-  scale: function (m, sx, sy, sz) {
-    return m4.multiply(m, m4.scaling(sx, sy, sz));
+  Scale: function (m, sx, sy, sz) {
+    return m4.Multiply(m, m4.Scaling(sx, sy, sz));
   },
 
-  inverse: function (m) {
+  Inverse: function (m) {
     var m00 = m[0 * 4 + 0];
     var m01 = m[0 * 4 + 1];
     var m02 = m[0 * 4 + 2];
@@ -251,7 +251,7 @@ var m4 = {
     ];
   },
 
-  vectorMultiply: function (v, m) {
+  VectorMultiply: function (v, m) {
     var dst = [];
     for (var i = 0; i < 4; ++i) {
       dst[i] = 0.0;
@@ -262,35 +262,35 @@ var m4 = {
     return dst;
   },
 
-  getTranslationInfo: function (m) {
+  GetTranslationInfo: function (m) {
     return [m[12], m[13], m[14]];
   },
 
-  getViewMatrix: function (cameraAngleRadians, radius) {
+  GetViewMatrix: function (cameraAngleRadians, radius) {
     var fPosition = [radius, 0, 0];
-    var cameraMatrix = m4.yRotation(cameraAngleRadians);
-    cameraMatrix = m4.translate(cameraMatrix, 0, 0, radius * 1.5);
+    var cameraMatrix = m4.YRotation(cameraAngleRadians);
+    cameraMatrix = m4.Translate(cameraMatrix, 0, 0, radius * 1.5);
 
-    var cameraPosition = m4.getTranslationInfo(cameraMatrix);
+    var cameraPosition = m4.GetTranslationInfo(cameraMatrix);
     var up = [0, 1, 0];
-    var cameraMatrix = m4.lookAt(cameraPosition, fPosition, up);
-    var viewMatrix = m4.inverse(cameraMatrix);
+    var cameraMatrix = m4.LookAt(cameraPosition, fPosition, up);
+    var viewMatrix = m4.Inverse(cameraMatrix);
 
     return viewMatrix;
   },
-  getWorldMatrix: function (translation, rotation, scale) {
-    var matrix = m4.translation(translation[0], translation[1], translation[2]);
-    matrix = m4.xRotate(matrix, rotation[0]);
-    matrix = m4.yRotate(matrix, rotation[1]);
-    matrix = m4.zRotate(matrix, rotation[2]);
-    matrix = m4.scale(matrix, scale[0], scale[1], scale[2]);
+  GetWorldMatrix: function (translation, rotation, scale) {
+    var matrix = m4.Translation(translation[0], translation[1], translation[2]);
+    matrix = m4.XRotate(matrix, rotation[0]);
+    matrix = m4.YRotate(matrix, rotation[1]);
+    matrix = m4.ZRotate(matrix, rotation[2]);
+    matrix = m4.Scale(matrix, scale[0], scale[1], scale[2]);
 
     return matrix;
   },
-  getProjViewWorldMatrix(matrix, viewMatrix, projectionMatrix)
+  GetProjViewWorldMatrix(matrix, viewMatrix, projectionMatrix)
   {
-      var viewWorldMatrix = m4.multiply(viewMatrix, matrix);
-      var viewProjectionMatrix = m4.multiply(projectionMatrix, viewWorldMatrix);
+      var viewWorldMatrix = m4.Multiply(viewMatrix, matrix);
+      var viewProjectionMatrix = m4.Multiply(projectionMatrix, viewWorldMatrix);
       return viewProjectionMatrix;
   }
 };

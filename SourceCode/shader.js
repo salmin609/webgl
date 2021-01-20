@@ -9,8 +9,8 @@ class Shader{
 
     InitLocation(gl)
     {
-        this.positionAttribLocation = myUtils.GetAttribLocation(gl, this.program, "vertexPos");
-        this.textureAttribLocation = myUtils.GetAttribLocation(gl, this.program, "texcoord");
+        this.positionAttribLocation = myUtils.GetAttribLocation(gl, this.program, "a_vertexPos");
+        this.textureAttribLocation = myUtils.GetAttribLocation(gl, this.program, "a_texcoord");
         this.textureUniformLocation = myUtils.GetUniformLocation(gl, this.program, "u_texture");
         this.matrixUniformLocation = myUtils.GetUniformLocation(gl, this.program, "u_mat");
     }
@@ -41,7 +41,7 @@ class Shader{
         this.positionAttribLocation, size, type, normalize, stride, offset);
 
         myUtils.BindBuffer(gl, gl.ARRAY_BUFFER, this.textureBuffer);
-        myUtils.setTexcoords(gl);
+        myUtils.SetTexcoords(gl);
 
         gl.enableVertexAttribArray(this.textureAttribLocation);
         gl.vertexAttribPointer(this.textureAttribLocation, 2, gl.FLOAT, false, 0, 0);
@@ -60,7 +60,7 @@ class Shader{
         };
 
         var image = new Image();
-        this.requestCORSIfNotSameOrigin(image, 'https://live.staticflickr.com/65535/50852583482_d261aa0873_k.jpg');
+        this.RequestCORSIfNotSameOrigin(image, 'https://live.staticflickr.com/65535/50852583482_d261aa0873_k.jpg');
         image.src = 'https://live.staticflickr.com/65535/50852583482_d261aa0873_k.jpg';
         image.addEventListener('load', function()
         {
@@ -72,7 +72,7 @@ class Shader{
             //gl.generateMipmap(gl.TEXTURE_2D);
         });
     }
-    requestCORSIfNotSameOrigin(img, url) 
+    RequestCORSIfNotSameOrigin(img, url) 
     {
         if ((new URL(url, window.location.href)).origin !== window.location.origin) {
           img.crossOrigin = "";

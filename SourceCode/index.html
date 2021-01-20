@@ -5,8 +5,8 @@
     </div>
   </div>
     <script id = "vertexShader" type = "notjs">
-        attribute vec4 vertexPos;
-        attribute vec2 texcoord;
+        attribute vec4 a_vertexPos;
+        attribute vec2 a_texcoord;
 
         uniform mat4 u_mat;
 
@@ -14,8 +14,8 @@
 
         void main()
         {
-            gl_Position = u_mat * vertexPos;
-            v_texcoord = texcoord;
+            gl_Position = u_mat * a_vertexPos;
+            v_texcoord = a_texcoord;
         }
     </script>
 

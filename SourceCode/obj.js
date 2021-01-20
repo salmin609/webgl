@@ -29,6 +29,6 @@ class Obj {
     }
     GetWorldMatrix()
     {
-        return m4.getWorldMatrix(this.translation, this.rotation, this.scale);
+        return m4.GetWorldMatrix(this.translation, this.rotation, this.scale);
     }
 };

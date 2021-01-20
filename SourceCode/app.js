@@ -8,8 +8,8 @@ function main() {
     return;
   }
   let shader = new Shader(gl, "vertexShader", "fragmentShader");
-  let obj = new Obj(shader, [0, 0, -360], [1, 1, 1], [myUtils.degToRad(190), myUtils.degToRad(40), myUtils.degToRad(320)]);
-  let obj2 = new Obj(shader, [0, 0, -180], [2, 2, 2], [myUtils.degToRad(120), myUtils.degToRad(140), myUtils.degToRad(120)]);
+  let obj = new Obj(shader, [0, 0, -360], [1, 1, 1], [myUtils.DegToRad(190), myUtils.DegToRad(40), myUtils.DegToRad(320)]);
+  let obj2 = new Obj(shader, [0, 0, -180], [2, 2, 2], [myUtils.DegToRad(120), myUtils.DegToRad(140), myUtils.DegToRad(120)]);
   let objs = new Array();
   objs.push(obj);
   objs.push(obj2);
@@ -57,7 +57,7 @@ function main() {
     {
       var object = objs[i];
       var matrix = object.GetWorldMatrix();
-      var viewProjectionMatrix = m4.getProjViewWorldMatrix(matrix, viewMatrix, projectionMatrix);
+      var viewProjectionMatrix = m4.GetProjViewWorldMatrix(matrix, viewMatrix, projectionMatrix);
 
       gl.uniformMatrix4fv(object.shader.GetMatrixUniformLocation(), false, viewProjectionMatrix);
       gl.uniform1i(object.shader.GetTextureUniformLocation(), 0);

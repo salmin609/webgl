@@ -28,7 +28,7 @@ var myUtils = {
             shape.threeDimensionFColor(),
             gl.STATIC_DRAW);
     },
-    setTexcoords:function(gl) 
+    SetTexcoords:function(gl) 
     {
         gl.bufferData(
             gl.ARRAY_BUFFER,
@@ -185,11 +185,11 @@ var myUtils = {
         gl.clearColor(0.2, 0.3, 0.4, 0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     },
-    radToDeg:function(r) 
+    RadToDeg:function(r) 
     {
         return r * 180 / Math.PI;
     },
-    degToRad:function(d)
+    DegToRad:function(d)
     {
         return d * Math.PI / 180;
     },
